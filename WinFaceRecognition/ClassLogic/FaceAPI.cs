@@ -24,16 +24,14 @@ namespace WinFaceRecognition.ClassLogic
     /// </summary>
     public static class FaceAPI
     {
-        private static short colorDistanceVal = 70;
-        private static double blurSTDval = 3.0;
+        private static short colorDistanceVal = 70; 
         private static int MinAcceptedBaseBackPercent = 65;
         private static double MinAcceptedNonBlurPercent = 15.1;
         private static int LargeDivisor = 20;
         private static int SmallDivisor = 3;
-        private static int ImageResolution = 96;
-        private static int Imagewidth = 275;
-        private static int ImageHeight = 314;
-        private static int MaxDistance = 90; 
+        private static int ImageResolution = 96; 
+        private static decimal SubstantialImpactRate = (decimal)3.5;
+
         public static bool IsValidPassport2(Bitmap originalImage, ref Label lblInfo, bool CheckResolution = false )
         {
             lblInfo.Text = "------New Validation Result v2-------";
@@ -96,13 +94,11 @@ namespace WinFaceRecognition.ClassLogic
                 Size HorizontalRectback = new Size((int)(FFTImage.Width / (double)SmallDivisor), (int)(FFTImage.Height / (double)LargeDivisor));
                 Rectangle HorizontalRect = new Rectangle(new System.Drawing.Point((int)((FFTImage.Width / (double)2) - (HorizontalRectback.Width / (double)2)), 
                                                                     (int)((FFTImage.Height / (double)2) - (HorizontalRectback.Height / (double)2))), HorizontalRectback);
-                // search the rectangle color categories
-                var MinAcceptedVal = MinAcceptedNonBlurPercent; 
-
+                // search the rectangle color categories 
                 var VerticalColorCat = GetColorCategoryPixelCountCompare(FFTImage, VerticalRect, BaseColor, colorDistanceVal);
                 var HorizontalColorCat = GetColorCategoryPixelCountCompare(FFTImage, HorizontalRect, BaseColor, colorDistanceVal);
 
-                if ((double)VerticalColorCat.BaseColorPercent < MinAcceptedVal || (double)HorizontalColorCat.BaseColorPercent < MinAcceptedVal) 
+                if ((double)VerticalColorCat.BaseColorPercent < MinAcceptedNonBlurPercent || (double)HorizontalColorCat.BaseColorPercent < MinAcceptedNonBlurPercent) 
                     throw new Exception("Ensure Picture is not Flattened nor Blurred"); 
                 else
                     lblInfo.Text += Environment.NewLine + "Picture is not Flattened nor Blurred";
@@ -116,8 +112,7 @@ namespace WinFaceRecognition.ClassLogic
             } 
         }
 
-        private static decimal SubstantialImpactRate = (decimal)3.5;
-        public static bool IsValidPassport(Bitmap originalImage, ref Label lblInfo, bool CheckResolution = false )
+        public static bool IsValidPassport(  Bitmap originalImage, ref Label lblInfo, bool CheckResolution = false )
         {
             try
             {
@@ -131,12 +126,13 @@ namespace WinFaceRecognition.ClassLogic
 
                 // 'do convert to grayscale
                 modifiedBMP = ImageModifier.ConvertToGrayScale((Bitmap)modifiedBMP);
-                // draw a circle/rect around the face and substract 
-                var res = DetectAnyFace(new Bitmap(originalImage),ObjectDetectorSearchMode.NoOverlap,
+                
+                // detect face in picture here
+                var res = DetectAnyFace(  originalImage,ObjectDetectorSearchMode.Default,
                                         1.5 ,
                                         Accord.Vision.Detection.ObjectDetectorScalingMode.GreaterToSmaller,true,3);
                 if (res.FaceCount == 0)
-                    res = DetectAnyFace(new Bitmap(originalImage), ObjectDetectorSearchMode.NoOverlap, 
+                    res = DetectAnyFace(  originalImage, ObjectDetectorSearchMode.Default, 
                                         1.5, 
                                         Accord.Vision.Detection.ObjectDetectorScalingMode.SmallerToGreater, true, 3);
                 if (res.FaceCount > 0)
@@ -169,6 +165,7 @@ namespace WinFaceRecognition.ClassLogic
                             lblInfo.Text += Environment.NewLine + "Face is not too close to the Top of the Passport";
 
                             // get the background and check if it plain
+                            //create a rectangle round the originalImage to be used for comparison/reference
                             Rectangle rects = new Rectangle(new System.Drawing.Point((int)(rect.X / (double)3), (int)(rect.Y / (double)3)),
                                 new Size((int)((rect.Right + (originalImage.Width - rect.Right) / (double)2) - (rect.X / (double)3)),
                                 (int)(originalImage.Height - (rect.Y / (double)3))));
@@ -191,12 +188,12 @@ namespace WinFaceRecognition.ClassLogic
                                     {
                                         if (y < (rect.Bottom) / (double)2 & y > rects.Top)
                                         {
-                                            Color pixelColor = originalImage.GetPixel(x, y); // original background check     -- diffImage.GetPixel(x, y) 'simple background check 
+                                            Color pixelColor = originalImage.GetPixel(x, y); // original background check - simple background check 
 
                                             if (BaseColorCompare == null)
                                                 BaseColorCompare = originalImage.GetPixel(x, y); // form bgcolor base compare
 
-                                            if (pixelColor != null/* TODO Change to default(_) if this is not a reference type */ )
+                                            if (pixelColor != null )
                                             {
                                                 if (GetColorDistance(pixelColor, BaseColorCompare) > 50)
                                                 {
@@ -241,6 +238,7 @@ namespace WinFaceRecognition.ClassLogic
             }
             return  false;
         }
+
         public static ColorCounterCategory GetColorCategoryPixelCountCompare(Bitmap SourceBmp, Rectangle rectSearch, 
             Color BaseColor, Int16 MaxColorDistance = 20)
         {
@@ -328,7 +326,7 @@ namespace WinFaceRecognition.ClassLogic
             }
         }
 
-        public static ProcessData DetectAnyFace(Bitmap Bmp, ObjectDetectorSearchMode SearchMode = ObjectDetectorSearchMode.NoOverlap, 
+        public static ProcessData DetectAnyFace(  Bitmap Bmp, ObjectDetectorSearchMode SearchMode = ObjectDetectorSearchMode.NoOverlap, 
             double ScalingFactor = 1.5, ObjectDetectorScalingMode ScalingMode = ObjectDetectorScalingMode.SmallerToGreater, 
             bool UseParallelProcessing = true, int Suppression = 3)
         {
@@ -339,7 +337,7 @@ namespace WinFaceRecognition.ClassLogic
                 FaceHaarCascade cascade = new FaceHaarCascade();
                 detector = new HaarObjectDetector(cascade, 30);
 
-                detector.SearchMode = ObjectDetectorSearchMode.Single;
+                detector.SearchMode = SearchMode;
                 detector.ScalingFactor =(float) ScalingFactor;
                 detector.ScalingMode = ScalingMode;
                 detector.UseParallelProcessing = UseParallelProcessing;
@@ -849,8 +847,7 @@ namespace WinFaceRecognition.ClassLogic
             {
             }
             return null;
-        }
-
+        } 
         public static Bitmap GetDifferenceFilterImage(Bitmap SourceImage )
         {
             try

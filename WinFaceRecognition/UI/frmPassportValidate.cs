@@ -17,14 +17,14 @@ namespace WinFaceRecognition.UI
             InitializeComponent();
         }
         OpenFileDialog fl = new OpenFileDialog() { Filter = ImageModifier.GetImageFilter() };
-
+        string filename;
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             try
             {
                 if (fl.ShowDialog() == DialogResult.OK)
                 {
-                    string filename = fl.FileName;
+                     filename = fl.FileName;
 
                     Bitmap bmp = new Bitmap(filename);
 
@@ -38,18 +38,17 @@ namespace WinFaceRecognition.UI
             {
                 MessageBox.Show(ex.Message, "Info", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-        }
-         
+        }         
 
         private void btnValidatePassport_Click(object sender, EventArgs e)
         {
             try
-            {
+            { 
                 lblInfo.Text = string.Empty;
-                if (FaceAPI.IsValidPassport((Bitmap)pxMain.Image, ref lblInfo))
+                if (FaceAPI.IsValidPassport(new Bitmap(filename), ref lblInfo))
                 {
 
-                }
+                } 
             }
             catch (Exception ex)
             {
@@ -61,7 +60,7 @@ namespace WinFaceRecognition.UI
         {
             try
             {
-                if (FaceAPI.IsValidPassport2((Bitmap)pxMain.Image, ref lblInfo))
+                if (FaceAPI.IsValidPassport2(new Bitmap(filename), ref lblInfo))
                 {
 
                 }

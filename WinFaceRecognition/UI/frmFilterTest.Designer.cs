@@ -180,7 +180,7 @@
             this.btnFTT.Name = "btnFTT";
             this.btnFTT.Size = new System.Drawing.Size(142, 42);
             this.btnFTT.TabIndex = 16;
-            this.btnFTT.Text = "FTT Detect";
+            this.btnFTT.Text = "FFT Detect";
             this.btnFTT.UseVisualStyleBackColor = true;
             this.btnFTT.Click += new System.EventHandler(this.btnFTT_Click);
             // 

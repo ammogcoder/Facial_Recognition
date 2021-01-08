@@ -21,8 +21,7 @@ using System.Drawing;
 namespace WinFaceRecognition.ClassLogic
 { 
     public class VideoHandle
-    {
-        private string imgSource;
+    { 
         private FilterInfoCollection webcam;
         private VideoCaptureDevice cam;
         string NoCameraInfo = "Please attach a Camera and Try Again ";
@@ -152,8 +151,7 @@ namespace WinFaceRecognition.ClassLogic
                 webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
                 if (webcam.Count < 1)
                 {
-                    MessageBox.Show( "Please attach a video input device, and try again", "No Camera");  
-                    imgSource = "";
+                    MessageBox.Show( "Please attach a video input device, and try again", "No Camera");   
                     return;
                 }
             }

@@ -47,7 +47,7 @@
             this.pnlHost.Controls.Add(this.pxMain);
             this.pnlHost.Location = new System.Drawing.Point(4, 3);
             this.pnlHost.Name = "pnlHost";
-            this.pnlHost.Size = new System.Drawing.Size(1114, 620);
+            this.pnlHost.Size = new System.Drawing.Size(1093, 620);
             this.pnlHost.TabIndex = 0;
             // 
             // pxMain
@@ -74,7 +74,7 @@
             // 
             this.btnProcess.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnProcess.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnProcess.Location = new System.Drawing.Point(966, 629);
+            this.btnProcess.Location = new System.Drawing.Point(945, 629);
             this.btnProcess.Name = "btnProcess";
             this.btnProcess.Size = new System.Drawing.Size(152, 42);
             this.btnProcess.TabIndex = 1;
@@ -89,7 +89,7 @@
             this.lblInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblInfo.Location = new System.Drawing.Point(161, 630);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(799, 41);
+            this.lblInfo.Size = new System.Drawing.Size(778, 41);
             this.lblInfo.TabIndex = 2;
             this.lblInfo.Text = ".....";
             // 
@@ -97,7 +97,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1121, 683);
+            this.ClientSize = new System.Drawing.Size(1100, 683);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.btnProcess);
             this.Controls.Add(this.btnBrowse);
